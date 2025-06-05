@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>URL要約サービス</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        input[type=url] { width: 60%; padding: 0.5em; }
+        button { padding: 0.5em 1em; }
+        #result { margin-top: 2em; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>URLを一行で要約</h1>
+    <form id="summaryForm">
+        <input type="url" name="url" id="url" placeholder="要約したいWebページのURLを入力" required>
+        <button type="submit">要約する</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.getElementById('summaryForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const url = document.getElementById('url').value;
+            document.getElementById('result').textContent = '要約中...';
+            const res = await fetch('/summarize', {
+                method: 'POST',
+                body: new URLSearchParams({url}),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            });
+            const data = await res.json();
+            document.getElementById('result').textContent = data.summary;
+        }
+    </script>
+</body>
+</html>
