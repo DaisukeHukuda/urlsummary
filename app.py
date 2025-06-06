@@ -5,7 +5,7 @@ from flask import Flask, request, render_template, jsonify
 app = Flask(__name__)
 
 GEMINI_API_KEY = "AIzaSyAD1JsEmsMm2CSbfxG2x1mJR-f3Y0Q9nTQ"
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY
 
 
 def fetch_url_text(url):
