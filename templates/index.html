@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>URLで要約</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background: #f5f5f5; }
+        .container { background: #fff; padding: 2em; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 2px 8px #ddd; }
+        input[type="text"] { width: 80%; padding: 0.5em; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 0.5em 1.2em; border: none; background: #1976d2; color: #fff; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1565c0; }
+        .summary { margin-top: 2em; font-size: 1.1em; background: #f0f4c3; padding: 1em; border-radius: 6px; }
+        .error { color: #d32f2f; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>URLで一文要約</h1>
+    <form id="summary-form">
+        <input type="text" name="url" id="url" placeholder="要約したいWebページのURLを入力" required>
+        <button type="submit">要約</button>
+    </form>
+    <div id="result"></div>
+</div>
+<script>
+    document.getElementById('summary-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const url = document.getElementById('url').value;
+        const resultDiv = document.getElementById('result');
+        resultDiv.textContent = '要約中...';
+        try {
+            const res = await fetch('/summarize', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `url=${encodeURIComponent(url)}`
+            });
+            const data = await res.json();
+            if(data.summary) {
+                resultDiv.innerHTML = `<div class='summary'>${data.summary}</div>`;
+            } else {
+                resultDiv.innerHTML = `<div class='error'>要約に失敗しました。</div>`;
+            }
+        } catch (err) {
+            resultDiv.innerHTML = `<div class='error'>通信エラーが発生しました。</div>`;
+        }
+    });
+</script>
+</body>
+</html>
